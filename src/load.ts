@@ -6,6 +6,7 @@ import { type Entry } from "./types/entries.ts";
  *
  * - if file exists, loads from file
  * - otherwise, fetches from API and saves to file
+ * - note: assumes directory exists
  *
  * @param handle Substack handle
  * @param sid Substack session ID
@@ -17,7 +18,7 @@ export async function loadArticles(
 ): Promise<Entry[]> {
   console.debug(`Loading article entries`);
 
-  const path = `tmp/${handle}.json`;
+  const path = `tmp/${handle}/entries.json`;
 
   try {
     const file = await Deno.readTextFile(path);
@@ -38,6 +39,7 @@ export async function loadArticles(
  *
  * - if file exists, loads from file
  * - otherwise, fetches from API and saves to file
+ * - note: assumes directory exists
  *
  * @param slug slug of article
  * @param handle Substack handle
@@ -51,7 +53,7 @@ export async function loadArticle(
 ): Promise<string> {
   console.debug(`Loading article ${slug}`);
 
-  const path = `tmp/${handle}/${slug}.html`;
+  const path = `tmp/${handle}/${slug}/article.html`;
 
   try {
     const file = await Deno.readTextFile(path);

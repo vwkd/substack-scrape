@@ -28,16 +28,19 @@ for (const item of entries) {
     continue;
   }
 
+  await Deno.mkdir(`out/${HANDLE}/${slug}`, { recursive: true });
+  await Deno.mkdir(`tmp/${HANDLE}/${slug}`, { recursive: true });
+
   const articleHTML = await loadArticle(slug, HANDLE, SID);
 
   const article = parse(articleHTML);
 
   await Deno.writeTextFile(
-    `tmp/${HANDLE}/${slug}.json`,
+    `tmp/${HANDLE}/${slug}/article.json`,
     JSON.stringify(article),
   );
 
   const bodyHTML = article.post.body_html;
 
-  await Deno.writeTextFile(`out/${HANDLE}/${slug}.html`, bodyHTML);
+  await Deno.writeTextFile(`out/${HANDLE}/${slug}/article.html`, bodyHTML);
 }
