@@ -80,6 +80,39 @@ export async function getArticle(
 }
 
 /**
+ * Get audio for article from API
+ *
+ * @param url URL of audio
+ * @param handle Substack handle
+ * @returns readable stream of audio
+ */
+export async function getAudio(
+  url: string,
+  handle: string,
+): Promise<ReadableStream<Uint8Array>> {
+  console.debug(`Fetching audio`);
+
+  // note: sleep here since in loop doesn't know if file exists, at worst sleeps once too much
+  await sleep(DELAY);
+
+  const res = await fetch(url, {
+    headers: buildHeaders(handle),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Got error ${res.status} ${res.statusText}`);
+  }
+
+  const body = res.body;
+
+  if (!body) {
+    throw new Error(`Got no body`);
+  }
+
+  return body;
+}
+
+/**
  * Build headers
  *
  * @param handle Substack handle

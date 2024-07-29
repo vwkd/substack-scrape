@@ -1,4 +1,6 @@
-import { getArticle, getArticles } from "./api.ts";
+import { exists } from "@std/fs";
+import { basename } from "@std/path";
+import { getArticle, getArticles, getAudio } from "./api.ts";
 import { type Entry } from "./types/entries.ts";
 
 /**
@@ -66,5 +68,51 @@ export async function loadArticle(
     } else {
       throw e;
     }
+  }
+}
+
+/**
+ * Load audio for article from file or API
+ *
+ * - if file exists, does nothing
+ * - otherwise, fetches from API and saves to file
+ * - note: assumes directory exists
+ * - note: no SID since from external CDN
+ *
+ * @param url URL of audio
+ * @param slug slug of article
+ * @param handle Substack handle
+ * @returns HTML string of article
+ */
+export async function loadAudio(
+  url: string,
+  slug: string,
+  handle: string,
+): Promise<void> {
+  // todo: is base of URL unique?
+  const base = basename(url);
+  console.debug(`Loading audio ${base}`);
+
+  const path = `out/${handle}/${slug}/${base}`;
+
+  if (
+    await exists(path, {
+      isReadable: true,
+      isFile: true,
+    })
+  ) {
+    return;
+  }
+
+  const body = await getAudio(url, handle);
+
+  const file = await Deno.create(path);
+
+  try {
+    await body.pipeTo(file.writable);
+  } catch (e) {
+    await Deno.remove(path);
+    file.close();
+    throw new Error(`Download was interrupted: '${e}'`);
   }
 }

@@ -1,5 +1,10 @@
 {
   "tasks": {
-    "articles": "deno run --allow-env --env=.env --allow-read --allow-write --allow-net src/articles.ts"
+    "articles": "deno run --allow-env --env=.env --allow-read --allow-write --allow-net src/articles.ts",
+    "audios": "deno run --allow-env --env=.env --allow-read --allow-write --allow-net --allow-sys src/audios.ts"
+  },
+  "imports": {
+    "@std/fs": "jsr:@std/fs@^1.0.0",
+    "@std/path": "jsr:@std/path@^1.0.2"
   }
 }
