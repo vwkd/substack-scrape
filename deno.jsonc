@@ -1,0 +1,5 @@
+{
+  "tasks": {
+    "articles": "deno run --allow-env --env=.env --allow-read --allow-write --allow-net src/articles.ts"
+  }
+}
