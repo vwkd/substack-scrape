@@ -34,3 +34,9 @@ deno task articles
 ```sh
 deno task audios
 ```
+
+- can convert HTML to markdown using pandoc and Nushell
+
+```sh
+ls out/handle/ | where type == "dir" | get name | par-each { cd $in; pandoc --wrap=none --strip-comments -f html-native_divs-native_spans -t gfm-tex_math_dollars-raw_html -o article.md article.html }
+```
